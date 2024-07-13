@@ -21,18 +21,33 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_DB: customer-db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: /run/secrets/pg_user
+      POSTGRES_PASSWORD: /run/secrets/pg_password
     volumes:
       - ./data:/var/lib/postgresql/data
+    secrets:
+      - pg_user
+      - pg_password
 
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: customer-service-pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: pgadmin@mail.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_PASSWORD: /run/secrets/pgadmin_password
     ports:
       - "8888:80"
     depends_on:
       - db
+    secrets:
+      - pgadmin_password
+
+
+
+secrets:
+  pg_user:
+    file: ./pg_user.txt
+  pg_password:
+    file: ./pg_password.txt
+  pgadmin_password:
+    file: ./pgadmin_password.txt

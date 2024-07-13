@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+pg_user.txt
+pg_password.txt
+pgadmin_password.txt
