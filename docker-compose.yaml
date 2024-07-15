@@ -42,8 +42,6 @@ services:
     secrets:
       - pgadmin_password
 
-
-
 secrets:
   pg_user:
     file: ./pg_user.txt
