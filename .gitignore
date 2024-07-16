@@ -32,7 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 
-#Secrets
+### Secrets ###
 pg_user.txt
 pg_password.txt
 pgadmin_password.txt
