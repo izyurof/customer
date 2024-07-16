@@ -22,7 +22,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <checkstyle.dir>${basedir}/config/checkstyle</checkstyle.dir>
+        <checkstyle.dir>/config/checkstyle</checkstyle.dir>
         <maven.checkstyle.plugin.version>3.4.0</maven.checkstyle.plugin.version>
         <checktyle.dependency.version>10.17.0</checktyle.dependency.version>
     </properties>
@@ -47,7 +47,7 @@
                             <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
                             <sourceDirectory>${project.build.testSourceDirectory}</sourceDirectory>
                         </sourceDirectories>
-                        <configLocation>${checkstyle.dir}/checkstyle.xml</configLocation>
+                        <configLocation>${checkstyle.dir}/google_checks.xml</configLocation>
                         <suppressionsLocation>${checkstyle.dir}/suppressions.xml</suppressionsLocation>
                         <consoleOutput>true</consoleOutput>
                         <failsOnError>true</failsOnError>
