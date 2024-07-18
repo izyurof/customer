@@ -1,0 +1,33 @@
+name: Service build checkstyle an test
+
+on:
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: clean with Maven
+        run: mvn -B clean
+
+      #TODO uncomment after adding checkstyle to the project.
+#      - name: Checkstyle with Maven
+#        run: mvn -B checkstyle:check
+
+      - name: Compile with Maven
+        run: mvn -B compile
+
+      - name: Test with Maven
+        run: mvn -B test
