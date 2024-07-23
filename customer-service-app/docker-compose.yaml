@@ -1,0 +1,64 @@
+services:
+
+  app:
+    image: ghcr.io/iprody/iprody-devs-gr0000000011-customer-service/customer-service:latest
+    restart: always
+    container_name: customer-service
+    environment:
+      POSTGRES_DB: customer
+      POSTGRES_USER: /run/secrets/postgres_user
+      POSTGRES_PASSWORD: /run/secrets/postgres_password
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    depends_on:
+      db:
+        condition: service_healthy
+    secrets:
+      - postgres_user
+      - postgres_password
+
+  db:
+    image: postgres:latest
+    container_name: "customer-service-db"
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: customer
+      POSTGRES_USER_FILE: /run/secrets/postgres_user
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "--quiet" ]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    secrets:
+      - postgres_user
+      - postgres_password
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: customer-service-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin@mail.com
+      PGADMIN_DEFAULT_PASSWORD_FILE: /run/secrets/pgadmin_password
+    ports:
+      - "8888:80"
+    depends_on:
+      - db
+    secrets:
+      - pgadmin_password
+
+secrets:
+  postgres_user:
+    file: secrets/postgres_user.txt
+  postgres_password:
+    file: secrets/postgres_password.txt
+  pgadmin_password:
+    file: secrets/pgadmin_password.txt
+
+volumes:
+  db_data:

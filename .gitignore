@@ -33,6 +33,4 @@ build/
 .vscode/
 
 ### Secrets ###
-pg_user.txt
-pg_password.txt
-pgadmin_password.txt
+/secrets
