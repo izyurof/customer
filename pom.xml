@@ -19,51 +19,49 @@
         <module>customer-service-app</module>
     </modules>
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <checkstyle.dir>/config/checkstyle</checkstyle.dir>
-        <maven.checkstyle.plugin.version>3.4.0</maven.checkstyle.plugin.version>
-        <checktyle.dependency.version>10.17.0</checktyle.dependency.version>
+        <checkstyle.dir>/checkstyle</checkstyle.dir>
+        <checkstyle.plugin.version>3.4.0</checkstyle.plugin.version>
+        <checkstyle.dependency.version>10.17.0</checkstyle.dependency.version>
+        <checkstyle.config.path>/checkstyle/config</checkstyle.config.path>
     </properties>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>${maven.checkstyle.plugin.version}</version>
-                    <inherited>true</inherited>
-                    <dependencies>
-                        <dependency>
-                            <groupId>com.puppycrawl.tools</groupId>
-                            <artifactId>checkstyle</artifactId>
-                            <version>${checktyle.dependency.version}</version>
-                        </dependency>
-                    </dependencies>
-                    <configuration>
-                        <sourceDirectories>
-                            <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
-                            <sourceDirectory>${project.build.testSourceDirectory}</sourceDirectory>
-                        </sourceDirectories>
-                        <configLocation>${checkstyle.dir}/google_checks.xml</configLocation>
-                        <suppressionsLocation>${checkstyle.dir}/suppressions.xml</suppressionsLocation>
-                        <consoleOutput>true</consoleOutput>
-                        <failsOnError>true</failsOnError>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>validate</id>
-                            <phase>validate</phase>
-                            <goals>
-                                <goal>check</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${checkstyle.plugin.version}</version>
+                <configuration>
+                    <sourceDirectories>
+                        <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+                        <sourceDirectory>${project.build.testSourceDirectory}</sourceDirectory>
+                    </sourceDirectories>
+
+                    <configLocation>${checkstyle.dir}/checkstyle.xml</configLocation>
+                    <suppressionsLocation>${checkstyle.config.path}/checkstyle-suppressions.xml</suppressionsLocation>
+                    <suppressionsLocation>${checkstyle.config.path}/checkstyle-xpath-suppressions.xml</suppressionsLocation>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>true</failsOnError>
+                    <linkXRef>false</linkXRef>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${checkstyle.dependency.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
     </build>
 
 </project>
