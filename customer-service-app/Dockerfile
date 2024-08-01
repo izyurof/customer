@@ -4,12 +4,13 @@ WORKDIR /build
 
 COPY customer-service-app/src customer-service-app/src
 COPY customer-service-app/pom.xml customer-service-app/pom.xml
+COPY e2e/pom.xml e2e/pom.xml
 COPY pom.xml .
 
-RUN mvn -B dependency:resolve
-RUN mvn -B dependency:resolve-plugins
+RUN mvn -B -pl customer-service-app dependency:resolve
+RUN mvn -B -pl customer-service-app dependency:resolve-plugins
 
-RUN mvn -B clean package -Dcheckstyle.skip && \
+RUN mvn -B -pl customer-service-app clean package -Dcheckstyle.skip && \
     ARTIFACT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout) && \
     cp customer-service-app/target/customer-service-app-${ARTIFACT_VERSION}.jar customer-service-app.jar
 

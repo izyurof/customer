@@ -17,6 +17,7 @@
 
     <modules>
         <module>customer-service-app</module>
+        <module>e2e</module>
     </modules>
     <properties>
         <checkstyle.dir>/checkstyle</checkstyle.dir>
