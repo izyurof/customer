@@ -5,6 +5,8 @@ services:
     restart: always
     container_name: customer-service
     environment:
+      DATASOURCE_URL: 'jdbc:postgresql://db:5432/customer'
+      DATASOURCE_DRIVER: org.postgresql.Driver
       POSTGRES_DB: customer
       POSTGRES_USER: /run/secrets/postgres_user
       POSTGRES_PASSWORD: /run/secrets/postgres_password
@@ -20,7 +22,7 @@ services:
 
   db:
     image: postgres:latest
-    container_name: "customer-service-db"
+    container_name: customer-service-db
     restart: always
     ports:
       - "5432:5432"
@@ -54,11 +56,11 @@ services:
 
 secrets:
   postgres_user:
-    file: secrets/postgres_user.txt
+    file: ../secrets/postgres_user.txt
   postgres_password:
-    file: secrets/postgres_password.txt
+    file: ../secrets/postgres_password.txt
   pgadmin_password:
-    file: secrets/pgadmin_password.txt
+    file: ../secrets/pgadmin_password.txt
 
 volumes:
   db_data:

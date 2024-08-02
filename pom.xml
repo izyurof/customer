@@ -40,7 +40,7 @@
 
                     <configLocation>${checkstyle.dir}/checkstyle.xml</configLocation>
                     <suppressionsLocation>${checkstyle.config.path}/checkstyle-suppressions.xml</suppressionsLocation>
-                    <suppressionsLocation>${checkstyle.config.path}/checkstyle-xpath-suppressions.xml</suppressionsLocation>
+<!--                    <suppressionsLocation>${checkstyle.config.path}/checkstyle-xpath-suppressions.xml</suppressionsLocation>-->
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>
                     <linkXRef>false</linkXRef>

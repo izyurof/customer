@@ -1,0 +1,76 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: izyurof
+      changes:
+        - tagDatabase:
+            tag: v1.0
+
+  - changeSet:
+      id: 2
+      author: izyurof
+      changes:
+        - sqlFile:
+            path: create-countries-table.sql
+            relativeToChangelogFile: true
+      rollback:
+        - sqlFile:
+            path: drop-countries-table.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 3
+      author: izyurof
+      changes:
+        - tagDatabase:
+            tag: v1.1
+
+  - changeSet:
+      id: 4
+      author: izyurof
+      changes:
+        - sqlFile:
+            path: create-contactdetails-table.sql
+            relativeToChangelogFile: true
+      rollback:
+        - sqlFile:
+            path: drop-contactdetails-table.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 5
+      author: izyurof
+      changes:
+        - tagDatabase:
+            tag: v1.2
+
+  - changeSet:
+      id: 6
+      author: izyurof
+      changes:
+        - sqlFile:
+            path: create-customers-table.sql
+            relativeToChangelogFile: true
+      rollback:
+        - sqlFile:
+            path: drop-customers-table.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 7
+      author: izyurof
+      changes:
+        - tagDatabase:
+            tag: v1.3
+
+  - changeSet:
+      id: 8
+      author: izyurof
+      changes:
+        - sqlFile:
+            path: inserting-into-a-countries-table.sql
+            relativeToChangelogFile: true
+      rollback:
+        - sqlFile:
+            path: delete-from-countries-table.sql
+            relativeToChangelogFile: true
