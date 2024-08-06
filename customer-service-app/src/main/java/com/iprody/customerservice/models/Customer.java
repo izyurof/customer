@@ -12,17 +12,15 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-/**
- * Entity Customer.
- */
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "customers", schema = "public")
@@ -61,10 +59,12 @@ public class Customer {
     @JoinColumn(name = "contact_details_id", referencedColumnName = "id")
     private ContactDetails contactDetails;
 
-    @Column(name = "createdat")
-    private ZonedDateTime createdAt;
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private Instant createdAt;
 
-    @Column(name = "updatedat")
-    private ZonedDateTime updatedAt;
+    @Column(name = "updated_at", updatable = true)
+    @UpdateTimestamp
+    private Instant updatedAt;
 
 }

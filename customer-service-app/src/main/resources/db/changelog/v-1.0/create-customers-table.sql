@@ -8,8 +8,8 @@ CREATE TABLE IF NOT EXISTS customers (
     surname VARCHAR(30) NOT NULL,
     country_code_id BIGINT NOT NULL ,
     contact_details_id BIGINT NOT NULL,
-    createdAt TIMESTAMP WITH TIME ZONE NOT NULL,
-    updatedAt TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
     FOREIGN KEY (country_code_id) REFERENCES countries(id),
     FOREIGN KEY (contact_details_id) REFERENCES contactdetails(id)
 )

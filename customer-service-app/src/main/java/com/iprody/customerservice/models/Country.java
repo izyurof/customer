@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -51,12 +51,12 @@ public class Country {
     @OneToMany(mappedBy = "country")
     private List<Customer> customers;
 
-    @Column(name = "createdat")
+    @Column(name = "created_at")
     @CreationTimestamp
-    private ZonedDateTime createdAt;
+    private Instant createdAt;
 
-    @Column(name = "updatedat")
+    @Column(name = "updated_at", updatable = true)
     @UpdateTimestamp
-    private ZonedDateTime updatedAt;
+    private Instant updatedAt;
 
 }
