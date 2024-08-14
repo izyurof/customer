@@ -124,37 +124,4 @@ public class CountryDtoValidationTests {
         assertThat(id).isEqualTo(1);
     }
 
-    @Test
-    public void shouldReturnErrorWhenNullCountryDtoCreatedAt() {
-        // given
-        CountryDto countryDto = new CountryDto();
-
-        // when
-        Set<ConstraintViolation<CountryDto>> validate = validator.validate(countryDto);
-        long id = validate.stream()
-                .filter(
-                        violation -> violation.getPropertyPath().toString().equals("createdAt")
-                )
-                .count();
-
-        // then
-        assertThat(id).isEqualTo(1);
-    }
-
-    @Test
-    public void shouldReturnErrorWhenNullCountryDtoUpdatedAt() {
-        // given
-        CountryDto countryDto = new CountryDto();
-
-        // when
-        Set<ConstraintViolation<CountryDto>> validate = validator.validate(countryDto);
-        long id = validate.stream()
-                .filter(
-                        violation -> violation.getPropertyPath().toString().equals("updatedAt")
-                )
-                .count();
-
-        // then
-        assertThat(id).isEqualTo(1);
-    }
 }

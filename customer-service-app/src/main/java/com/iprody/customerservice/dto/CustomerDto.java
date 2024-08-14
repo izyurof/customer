@@ -18,7 +18,6 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class CustomerDto {
 
-    @NotNull
     private Long id;
 
     @NotNull
@@ -35,10 +34,8 @@ public class CustomerDto {
     @NotNull
     private ContactDetailsDto contactDetailsDto;
 
-    @NotNull
     private Instant createdAt;
 
-    @NotNull
     private Instant updatedAt;
     
 }

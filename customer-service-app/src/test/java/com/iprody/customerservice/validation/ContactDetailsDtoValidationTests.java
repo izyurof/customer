@@ -39,24 +39,6 @@ public class ContactDetailsDtoValidationTests {
     }
 
     @Test
-    public void shouldReturnErrorWhenNullContactDetailsDtoId() {
-        // given
-        ContactDetailsDto contactDetailsDto = new ContactDetailsDto();
-
-        // when
-        Set<ConstraintViolation<ContactDetailsDto>> validate =
-                validator.validate(contactDetailsDto);
-        long id = validate.stream()
-                .filter(
-                        violation -> violation.getPropertyPath().toString().equals("id")
-                )
-                .count();
-
-        // then
-        assertThat(id).isEqualTo(1);
-    }
-
-    @Test
     public void shouldReturnErrorWhenNullContactDetailsDtoEmail() {
         // given
         ContactDetailsDto contactDetailsDto = new ContactDetailsDto();
@@ -130,39 +112,4 @@ public class ContactDetailsDtoValidationTests {
         assertThat(id).isEqualTo(1);
     }
 
-    @Test
-    public void shouldReturnErrorWhenNullContactDetailsDtoCreatedAt() {
-        // given
-        ContactDetailsDto contactDetailsDto = new ContactDetailsDto();
-
-        // when
-        Set<ConstraintViolation<ContactDetailsDto>> validate =
-                validator.validate(contactDetailsDto);
-        long id = validate.stream()
-                .filter(
-                        violation -> violation.getPropertyPath().toString().equals("createdAt")
-                )
-                .count();
-
-        // then
-        assertThat(id).isEqualTo(1);
-    }
-
-    @Test
-    public void shouldReturnErrorWhenNullContactDetailsDtoUpdatedAt() {
-        // given
-        ContactDetailsDto contactDetailsDto = new ContactDetailsDto();
-
-        // when
-        Set<ConstraintViolation<ContactDetailsDto>> validate =
-                validator.validate(contactDetailsDto);
-        long id = validate.stream()
-                .filter(
-                        violation -> violation.getPropertyPath().toString().equals("createdAt")
-                )
-                .count();
-
-        // then
-        assertThat(id).isEqualTo(1);
-    }
 }

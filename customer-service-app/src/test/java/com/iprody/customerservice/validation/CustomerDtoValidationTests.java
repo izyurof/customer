@@ -38,26 +38,6 @@ public class CustomerDtoValidationTests {
     }
 
     @Test
-    public void shouldReturnErrorWhenNullCustomerDtoId() {
-        // given
-        CustomerDto customerDto = new CustomerDto();
-
-        // when
-        Set<ConstraintViolation<CustomerDto>> validate = validator.validate(customerDto);
-        long id = validate.stream()
-                .filter(
-                        violation -> violation
-                                .getPropertyPath()
-                                .toString()
-                                .equals("id")
-                )
-                .count();
-
-        // then
-        assertThat(id).isEqualTo(1);
-    }
-
-    @Test
     public void shouldReturnErrorWhenNullCustomerDtoName() {
         // given
         CustomerDto customerDto = new CustomerDto();
@@ -179,37 +159,4 @@ public class CustomerDtoValidationTests {
         assertThat(id).isEqualTo(1);
     }
 
-    @Test
-    public void shouldReturnErrorWhenNullCustomerDtoCreatedAt() {
-        // given
-        CustomerDto customerDto = new CustomerDto();
-
-        // when
-        Set<ConstraintViolation<CustomerDto>> validate = validator.validate(customerDto);
-        long id = validate.stream()
-                .filter(
-                        violation -> violation.getPropertyPath().toString().equals("createdAt")
-                )
-                .count();
-
-        // then
-        assertThat(id).isEqualTo(1);
-    }
-
-    @Test
-    public void shouldReturnErrorWhenNullCustomerDtoUpdatedAt() {
-        // given
-        CustomerDto customerDto = new CustomerDto();
-
-        // when
-        Set<ConstraintViolation<CustomerDto>> validate = validator.validate(customerDto);
-        long id = validate.stream()
-                .filter(
-                        violation -> violation.getPropertyPath().toString().equals("updatedAt")
-                )
-                .count();
-
-        // then
-        assertThat(id).isEqualTo(1);
-    }
 }

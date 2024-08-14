@@ -19,12 +19,14 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class CountryDto {
 
+    private static final String COUNTRY_CODE_REGEX = "^[A-Z]{3}$";
+
     @NotNull
     private Long id;
 
     @NotNull
     @Pattern(
-            regexp = "^[A-Z]{3}$",
+            regexp = COUNTRY_CODE_REGEX,
             message = "Country code must be exactly 3 uppercase English letters"
     )
     private String countryCode;
@@ -33,10 +35,8 @@ public class CountryDto {
     @Size(max = 60)
     private String name;
 
-    @NotNull
     private Instant createdAt;
 
-    @NotNull
     private Instant updatedAt;
 
 }
