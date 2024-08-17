@@ -1,5 +1,7 @@
 package com.iprody.customerservice.dto;
 
+import static com.iprody.customerservice.utils.ValidationRegex.COUNTRY_CODE_REGEX;
+
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -18,8 +20,6 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class CountryDto {
-
-    private static final String COUNTRY_CODE_REGEX = "^[A-Z]{3}$";
 
     @NotNull
     private Long id;

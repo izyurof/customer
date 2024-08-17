@@ -1,5 +1,8 @@
 package com.iprody.customerservice.dto;
 
+import static com.iprody.customerservice.utils.ValidationRegex.EMAIL_REGEX;
+import static com.iprody.customerservice.utils.ValidationRegex.TELEGRAM_ID_REGEX;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -18,12 +21,6 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class ContactDetailsDto {
-
-    private static final String EMAIL_REGEX = "^(?=.{1,256})(?=.{1,64}@.{1,255}$)(?=.{1,63}"
-            + "\\.[A-Za-z]{2,63}$)(?!.*[.]{2})[A-Za-z0-9+_.-]+"
-            + "@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
-
-    private static final String TELEGRAM_ID_REGEX = "^@[a-zA-Z0-9_]{4,31}$";
 
     private Long id;
 
