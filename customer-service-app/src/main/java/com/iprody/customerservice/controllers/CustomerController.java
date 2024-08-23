@@ -4,6 +4,7 @@ import com.iprody.customerservice.dto.CustomerDto;
 import com.iprody.customerservice.services.CustomerService;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.openapitools.api.V1CustomerApi;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,8 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("/v1/customers")
-public class CustomerController {
+public class CustomerController implements V1CustomerApi {
 
     private final CustomerService customerService;
 
@@ -31,25 +31,16 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @PostMapping
-    public ResponseEntity<?> createCustomer(
-            @Valid @RequestBody CustomerDto customerDto,
-            BindingResult bindingResult
-    ) {
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(
-                    bindingResult.getAllErrors(),
-                    HttpStatus.BAD_REQUEST
-            );
-        }
+    @Override
+    public ResponseEntity<CustomerDto> createCustomer(CustomerDto customerDto) {
         return new ResponseEntity<>(
                 customerService.save(customerDto),
                 HttpStatus.CREATED
         );
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CustomerDto> getCustomer(@PathVariable("id") Long id) {
+    @Override
+    public ResponseEntity<CustomerDto> getCustomer(Long id) {
         CustomerDto customerDto = customerService
                 .findById(id)
                 .orElseThrow(
@@ -64,14 +55,14 @@ public class CustomerController {
         );
     }
 
-    @GetMapping()
+    @Override
     public ResponseEntity<List<CustomerDto>> getAllCustomers(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String surname,
-            @RequestParam(required = false) String countryName,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "25") int size,
-            @RequestParam(required = false) String sortDirection
+            String name,
+            String surname,
+            String countryName,
+            Integer page,
+            Integer size,
+            String sortDirection
     ) {
         Pageable pageable = getPageable(page, size, sortDirection);
 
@@ -83,67 +74,32 @@ public class CustomerController {
         );
     }
 
-    @PatchMapping("/{id}/update/name")
-    public ResponseEntity<?> updateCustomerName(
-            @PathVariable("id") Long id,
-            @Valid @RequestBody CustomerDto customerDto,
-            BindingResult bindingResult
-    ) {
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
-        }
+    @Override
+    public ResponseEntity<Void> updateCustomerName(Long id, CustomerDto customerDto) {
         customerService.updateCustomerName(id, customerDto);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PatchMapping("/{id}/update/surname")
-    public ResponseEntity<?> updateCustomerSurname(
-            @PathVariable("id") Long id,
-            @Valid @RequestBody CustomerDto customerDto,
-            BindingResult bindingResult
-    ) {
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
-        }
+    @Override
+    public ResponseEntity<Void> updateCustomerSurname(Long id, CustomerDto customerDto) {
         customerService.updateCustomerSurname(id, customerDto);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PatchMapping("/{id}/update/email")
-    public ResponseEntity<?> updateCustomerEmail(
-            @PathVariable("id") Long id,
-            @Valid @RequestBody CustomerDto customerDto,
-            BindingResult bindingResult
-    ) {
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
-        }
+    @Override
+    public ResponseEntity<Void> updateCustomerEmail(Long id, CustomerDto customerDto) {
         customerService.updateCustomerEmail(id, customerDto);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PatchMapping("/{id}/update/telegram_id")
-    public ResponseEntity<?> updateCustomerTelegramId(
-            @PathVariable("id") Long id,
-            @Valid @RequestBody CustomerDto customerDto,
-            BindingResult bindingResult
-    ) {
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
-        }
+    @Override
+    public ResponseEntity<Void> updateCustomerTelegramId(Long id, CustomerDto customerDto) {
         customerService.updateCustomerTelegramId(id, customerDto);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PatchMapping("/{id}/update/country")
-    public ResponseEntity<?> updateCustomerCountry(
-            @PathVariable("id") Long id,
-            @Valid @RequestBody CustomerDto customerDto,
-            BindingResult bindingResult
-    ) {
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
-        }
+    @Override
+    public ResponseEntity<Void> updateCustomerCountry(Long id, CustomerDto customerDto) {
         customerService.updateCustomerCountry(id, customerDto);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
