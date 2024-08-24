@@ -1,8 +1,8 @@
 package com.iprody.customerservice.utils.builder;
 
-import com.iprody.customerservice.dto.ContactDetailsDto;
-import com.iprody.customerservice.dto.CountryDto;
-import com.iprody.customerservice.dto.CustomerDto;
+import com.iprody.customerservice.dto.contactdetails.ContactDetailsDto;
+import com.iprody.customerservice.dto.country.CountryDto;
+import com.iprody.customerservice.dto.customer.CustomerDto;
 import java.time.Instant;
 
 public class CustomerDtoBuilder {

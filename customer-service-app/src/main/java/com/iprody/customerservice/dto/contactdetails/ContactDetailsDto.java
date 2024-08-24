@@ -1,4 +1,4 @@
-package com.iprody.customerservice.dto;
+package com.iprody.customerservice.dto.contactdetails;
 
 import static com.iprody.customerservice.utils.ValidationRegex.EMAIL_REGEX;
 import static com.iprody.customerservice.utils.ValidationRegex.TELEGRAM_ID_REGEX;

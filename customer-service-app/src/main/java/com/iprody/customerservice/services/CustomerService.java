@@ -1,6 +1,6 @@
 package com.iprody.customerservice.services;
 
-import com.iprody.customerservice.dto.CustomerDto;
+import com.iprody.customerservice.dto.customer.CustomerDto;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -4,7 +4,7 @@ import static com.iprody.customerservice.utils.builder.CustomerDtoBuilder.getCus
 import static jakarta.validation.Validation.buildDefaultValidatorFactory;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.iprody.customerservice.dto.ContactDetailsDto;
+import com.iprody.customerservice.dto.contactdetails.ContactDetailsDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;

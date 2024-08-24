@@ -6,8 +6,8 @@ import static com.iprody.customerservice.utils.builder.CustomerDtoBuilder.getThi
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.iprody.customerservice.dto.CountryDto;
-import com.iprody.customerservice.dto.CustomerDto;
+import com.iprody.customerservice.dto.country.CountryDto;
+import com.iprody.customerservice.dto.customer.CustomerDto;
 import com.iprody.customerservice.mappers.CountryMapper;
 import com.iprody.customerservice.repositories.CountryRepository;
 import com.iprody.customerservice.repositories.CustomerRepository;

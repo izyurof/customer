@@ -1,6 +1,6 @@
 package com.iprody.customerservice.services;
 
-import com.iprody.customerservice.dto.ContactDetailsDto;
+import com.iprody.customerservice.dto.contactdetails.ContactDetailsDto;
 import com.iprody.customerservice.mappers.ContactDetailsMapper;
 import com.iprody.customerservice.repositories.ContactDetailsRepository;
 import jakarta.transaction.Transactional;

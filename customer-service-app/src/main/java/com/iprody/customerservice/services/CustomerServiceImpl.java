@@ -1,6 +1,6 @@
 package com.iprody.customerservice.services;
 
-import com.iprody.customerservice.dto.CustomerDto;
+import com.iprody.customerservice.dto.customer.CustomerDto;
 import com.iprody.customerservice.mappers.CustomerMapper;
 import com.iprody.customerservice.models.Customer;
 import com.iprody.customerservice.repositories.CustomerRepository;

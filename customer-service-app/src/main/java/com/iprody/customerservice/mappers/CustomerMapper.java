@@ -1,6 +1,6 @@
 package com.iprody.customerservice.mappers;
 
-import com.iprody.customerservice.dto.CustomerDto;
+import com.iprody.customerservice.dto.customer.CustomerDto;
 import com.iprody.customerservice.models.Customer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

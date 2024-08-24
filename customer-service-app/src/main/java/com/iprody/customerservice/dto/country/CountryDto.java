@@ -1,6 +1,9 @@
-package com.iprody.customerservice.dto;
+package com.iprody.customerservice.dto.country;
+
+import static com.iprody.customerservice.utils.ValidationRegex.COUNTRY_CODE_REGEX;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.time.Instant;
 import lombok.AllArgsConstructor;
@@ -16,28 +19,26 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class CustomerDto {
+public class CountryDto {
 
+    @NotNull
     private Long id;
 
     @NotNull
-    @Size(max = 30)
+    @Pattern(
+            regexp = COUNTRY_CODE_REGEX,
+            message = "Country code must be exactly 3 uppercase English letters"
+    )
+    private String countryCode;
+
+    @NotNull
+    @Size(max = 60)
     private String name;
-
-    @NotNull
-    @Size(max = 30)
-    private String surname;
-
-    @NotNull
-    private CountryDto countryDto;
-
-    @NotNull
-    private ContactDetailsDto contactDetailsDto;
 
     private Instant createdAt;
 
     private Instant updatedAt;
-    
+
 }
 
 

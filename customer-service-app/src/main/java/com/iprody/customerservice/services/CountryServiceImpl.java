@@ -1,6 +1,6 @@
 package com.iprody.customerservice.services;
 
-import com.iprody.customerservice.dto.CountryDto;
+import com.iprody.customerservice.dto.country.CountryDto;
 import com.iprody.customerservice.mappers.CountryMapper;
 import com.iprody.customerservice.repositories.CountryRepository;
 import jakarta.transaction.Transactional;

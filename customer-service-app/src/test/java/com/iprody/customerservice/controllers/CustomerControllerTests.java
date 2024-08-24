@@ -17,8 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.iprody.customerservice.dto.CountryDto;
-import com.iprody.customerservice.dto.CustomerDto;
+import com.iprody.customerservice.dto.country.CountryDto;
+import com.iprody.customerservice.dto.customer.CustomerDto;
 import com.iprody.customerservice.services.CustomerService;
 import java.util.List;
 import java.util.Optional;
