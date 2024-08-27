@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.iprody.customerservice.dto.country.CountryDto;
 import com.iprody.customerservice.dto.customer.CustomerDto;
+import com.iprody.customerservice.handlers.ExceptionsHandler;
 import com.iprody.customerservice.services.CustomerService;
 import java.util.List;
 import java.util.Optional;
@@ -50,7 +51,10 @@ public class CustomerControllerTests {
 
     @BeforeEach
     public void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(customerController).build();
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(customerController)
+                .setControllerAdvice(new ExceptionsHandler())
+                .build();
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);

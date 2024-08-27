@@ -1,6 +1,7 @@
 package com.iprody.customerservice.controllers;
 
 import com.iprody.customerservice.dto.customer.CustomerDto;
+import com.iprody.customerservice.exceptions.ResourceNotFoundException;
 import com.iprody.customerservice.services.CustomerService;
 import java.util.List;
 import org.openapitools.api.V1CustomerApi;
@@ -11,7 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class CustomerController implements V1CustomerApi {
@@ -34,12 +34,7 @@ public class CustomerController implements V1CustomerApi {
     public ResponseEntity<CustomerDto> getCustomer(Long id) {
         CustomerDto customerDto = customerService
                 .findById(id)
-                .orElseThrow(
-                        () -> new ResponseStatusException(
-                                HttpStatus.NOT_FOUND,
-                                String.format("Customer with id - %s not found", id)
-                        )
-                );
+                .orElseThrow(() -> new ResourceNotFoundException("Customer", id));
         return new ResponseEntity<>(
                 customerDto,
                 HttpStatus.OK
