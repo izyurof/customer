@@ -3,7 +3,7 @@ services:
     image: prom/prometheus:latest
     container_name: customer-service-prometheus
     volumes:
-      - ./prometheus.yaml:/etc/prometheus.yaml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
 
