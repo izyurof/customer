@@ -51,13 +51,7 @@ public class Customer {
     @Column(name = "surname")
     private String surname;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {
-        CascadeType.MERGE,
-        CascadeType.PERSIST,
-        CascadeType.REFRESH,
-        CascadeType.DETACH
-        }
-    )
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_code_id", referencedColumnName = "id")
     private Country country;
 

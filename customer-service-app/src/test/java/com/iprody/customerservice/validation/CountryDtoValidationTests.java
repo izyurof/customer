@@ -1,33 +1,24 @@
 package com.iprody.customerservice.validation;
 
-import static com.iprody.customerservice.utils.builder.CustomerDtoBuilder.getCustomerDtoWithId;
+import static com.iprody.customerservice.utils.builder.CountryDtoBuilder.getCountryDtoWithId;
 import static jakarta.validation.Validation.buildDefaultValidatorFactory;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.iprody.customerservice.dto.country.CountryDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
+import java.util.List;
 import java.util.Set;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CountryDtoValidationTests {
 
-    private Validator validator;
-
-    @BeforeAll
-    public void initValidator() {
-        ValidatorFactory factory = buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
+    private Validator validator = buildDefaultValidatorFactory().getValidator();
 
     @Test
     public void shouldReturnNoErrorsWhenValidCountryDto() {
         // given
-        CountryDto countryDto = getCustomerDtoWithId().getCountryDto();
+        CountryDto countryDto = getCountryDtoWithId(1L);
 
         // when
         Set<ConstraintViolation<CountryDto>> validate =
@@ -40,88 +31,76 @@ public class CountryDtoValidationTests {
     @Test
     public void shouldReturnErrorWhenNullCountryDtoId() {
         // given
-        CountryDto countryDto = new CountryDto();
+        CountryDto countryDto = getCountryDtoWithId(1L);
+        countryDto.setId(null);
 
         // when
-        Set<ConstraintViolation<CountryDto>> validate = validator.validate(countryDto);
-        long id = validate.stream()
-                .filter(
-                        violation -> violation.getPropertyPath().toString().equals("id")
-                )
-                .count();
+        List<ConstraintViolation<CountryDto>> violations = validator
+                .validate(countryDto).stream().toList();
 
         // then
-        assertThat(id).isEqualTo(1);
+        assertThat(violations.size()).isEqualTo(1);
+        assertThat(violations.get(0).getPropertyPath().toString()).isEqualTo("id");
     }
 
     @Test
     public void shouldReturnErrorWhenNullCountryDtoName() {
         // given
-        CountryDto countryDto = new CountryDto();
+        CountryDto countryDto = getCountryDtoWithId(1L);
+        countryDto.setName(null);
 
         // when
-        Set<ConstraintViolation<CountryDto>> validate = validator.validate(countryDto);
-        long id = validate.stream()
-                .filter(
-                        violation -> violation.getPropertyPath().toString().equals("name")
-                )
-                .count();
+        List<ConstraintViolation<CountryDto>> violations = validator
+                .validate(countryDto).stream().toList();
 
         // then
-        assertThat(id).isEqualTo(1);
+        assertThat(violations.size()).isEqualTo(1);
+        assertThat(violations.get(0).getPropertyPath().toString()).isEqualTo("name");
     }
 
     @Test
     public void shouldReturnErrorWhenNullCountryDtoNameLongerThan60Characters() {
         // given
-        CountryDto countryDto = new CountryDto();
+        CountryDto countryDto = getCountryDtoWithId(1L);
         countryDto.setName("edtfggtkujtyhtgftgyjhlkyjgtgyhghggyhjklkhgfghjlukjhythhjikyujyh");
 
         // when
-        Set<ConstraintViolation<CountryDto>> validate = validator.validate(countryDto);
-        long id = validate.stream()
-                .filter(
-                        violation -> violation.getPropertyPath().toString().equals("name")
-                )
-                .count();
+        List<ConstraintViolation<CountryDto>> violations = validator
+                .validate(countryDto).stream().toList();
 
         // then
-        assertThat(id).isEqualTo(1);
+        assertThat(violations.size()).isEqualTo(1);
+        assertThat(violations.get(0).getPropertyPath().toString()).isEqualTo("name");
     }
 
     @Test
     public void shouldReturnErrorWhenNullCountryDtoCountryCode() {
         // given
-        CountryDto countryDto = new CountryDto();
+        CountryDto countryDto = getCountryDtoWithId(1L);
+        countryDto.setCountryCode(null);
 
         // when
-        Set<ConstraintViolation<CountryDto>> validate = validator.validate(countryDto);
-        long id = validate.stream()
-                .filter(
-                        violation -> violation.getPropertyPath().toString().equals("countryCode")
-                )
-                .count();
+        List<ConstraintViolation<CountryDto>> violations = validator
+                .validate(countryDto).stream().toList();
 
         // then
-        assertThat(id).isEqualTo(1);
+        assertThat(violations.size()).isEqualTo(1);
+        assertThat(violations.get(0).getPropertyPath().toString()).isEqualTo("countryCode");
     }
 
     @Test
     public void shouldReturnErrorWhenCountryDtoCountryCodeNotThreeUppercaseCharacter() {
         // given
-        CountryDto countryDto = new CountryDto();
+        CountryDto countryDto = getCountryDtoWithId(1L);
         countryDto.setCountryCode("abc");
 
         // when
-        Set<ConstraintViolation<CountryDto>> validate = validator.validate(countryDto);
-        long id = validate.stream()
-                .filter(
-                        violation -> violation.getPropertyPath().toString().equals("countryCode")
-                )
-                .count();
+        List<ConstraintViolation<CountryDto>> violations = validator
+                .validate(countryDto).stream().toList();
 
         // then
-        assertThat(id).isEqualTo(1);
+        assertThat(violations.size()).isEqualTo(1);
+        assertThat(violations.get(0).getPropertyPath().toString()).isEqualTo("countryCode");
     }
 
 }

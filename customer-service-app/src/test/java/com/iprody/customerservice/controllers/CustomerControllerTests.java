@@ -1,6 +1,7 @@
 package com.iprody.customerservice.controllers;
 
-import static com.iprody.customerservice.utils.builder.CustomerDtoBuilder.getCustomerDto;
+import static com.iprody.customerservice.utils.builder.ContactDetailsDtoBuilder.getContactDetailsDtoWithId;
+import static com.iprody.customerservice.utils.builder.CountryDtoBuilder.getCountryDtoWithId;
 import static com.iprody.customerservice.utils.builder.CustomerDtoBuilder.getCustomerDtoWithId;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -17,7 +18,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.iprody.customerservice.dto.country.CountryDto;
 import com.iprody.customerservice.dto.customer.CustomerDto;
 import com.iprody.customerservice.handlers.ExceptionsHandler;
 import com.iprody.customerservice.services.CustomerService;
@@ -63,7 +63,7 @@ public class CustomerControllerTests {
     @Test
     public void shouldReturnStatus201ThenValidCustomer() throws Exception {
         // given
-        CustomerDto customerDto = getCustomerDtoWithId();
+        CustomerDto customerDto = getFullFieldCustomerDto(1L);
         when(customerService.save(any(CustomerDto.class))).thenReturn(customerDto);
 
         // when
@@ -75,6 +75,13 @@ public class CustomerControllerTests {
         validateCustomerJsonResponse(perform, List.of(customerDto));
         verify(customerService, times(1))
                 .save(any(CustomerDto.class));
+    }
+
+    private static CustomerDto getFullFieldCustomerDto(Long id) {
+        CustomerDto customerDto = getCustomerDtoWithId(id);
+        customerDto.setCountryDto(getCountryDtoWithId(id));
+        customerDto.setContactDetailsDto(getContactDetailsDtoWithId(id));
+        return customerDto;
     }
 
     @Test
@@ -95,7 +102,7 @@ public class CustomerControllerTests {
     @Test
     public void shouldReturnStatus200ThenCustomerIsExist() throws Exception {
         // given
-        CustomerDto customerDto = getCustomerDtoWithId();
+        CustomerDto customerDto = getFullFieldCustomerDto(1L);
         Long customerId = customerDto.getId();
         when(customerService.findById(customerId)).thenReturn(Optional.of(customerDto));
 
@@ -126,9 +133,9 @@ public class CustomerControllerTests {
     @Test
     public void shouldReturnStatus200WhenGetAllCustomers() throws Exception {
         // given
-        CustomerDto customerDtoWithId = getCustomerDtoWithId();
-        CustomerDto customerDto = getCustomerDto();
-        List<CustomerDto> customers = List.of(customerDtoWithId, customerDto);
+        CustomerDto firstCustomerDto = getFullFieldCustomerDto(1L);
+        CustomerDto secondCustomerDto = getFullFieldCustomerDto(2L);
+        List<CustomerDto> customers = List.of(firstCustomerDto, secondCustomerDto);
         Page<CustomerDto> pageOfCustomers = new PageImpl<>(customers);
         when(customerService.findAll(any(), any(), any(), any(), any()))
                 .thenReturn(pageOfCustomers);
@@ -148,10 +155,10 @@ public class CustomerControllerTests {
     @Test
     public void shouldReturnStatus200WhenUpdateCustomerName() throws Exception {
         // given
-        CustomerDto customerDto = getCustomerDtoWithId();
-        customerDto.setName("new name");
+        CustomerDto customerDto = getFullFieldCustomerDto(1L);
         Long customerId = customerDto.getId();
         doNothing().when(customerService).updateCustomerName(anyLong(), any(CustomerDto.class));
+
         // when-then
         mockMvc.perform(patch("/v1/customers/{id}/update/name", customerId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -165,8 +172,7 @@ public class CustomerControllerTests {
     @Test
     public void shouldReturnStatus200WhenUpdateCustomerSurname() throws Exception {
         // given
-        CustomerDto customerDto = getCustomerDtoWithId();
-        customerDto.setSurname("new surname");
+        CustomerDto customerDto = getFullFieldCustomerDto(1L);
         Long customerId = customerDto.getId();
         doNothing().when(customerService).updateCustomerSurname(anyLong(), any(CustomerDto.class));
 
@@ -183,11 +189,10 @@ public class CustomerControllerTests {
     @Test
     public void shouldReturnStatus200WhenUpdateCustomerEmail() throws Exception {
         // given
-        CustomerDto customerDto = getCustomerDtoWithId();
-        customerDto.getContactDetailsDto().setEmail("dfsdf@email.com");
+        CustomerDto customerDto = getFullFieldCustomerDto(1L);
         Long customerId = customerDto.getId();
         doNothing().when(customerService).updateCustomerEmail(anyLong(), any(CustomerDto.class));
-
+        
         // when
         mockMvc.perform(patch("/v1/customers/{id}/update/email", customerId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -201,8 +206,7 @@ public class CustomerControllerTests {
     @Test
     public void shouldReturnStatus200WhenUpdateCustomerTelegramId() throws Exception {
         // given
-        CustomerDto customerDto = getCustomerDtoWithId();
-        customerDto.getContactDetailsDto().setTelegramId("@newid");
+        CustomerDto customerDto = getFullFieldCustomerDto(1L);
         Long customerId = customerDto.getId();
         doNothing()
                 .when(customerService)
@@ -221,8 +225,7 @@ public class CustomerControllerTests {
     @Test
     public void shouldReturnStatus200WhenUpdateCustomerCountry() throws Exception {
         // given
-        CustomerDto customerDto = getCustomerDtoWithId();
-        customerDto.setCountryDto(getNewCountryDto());
+        CustomerDto customerDto = getFullFieldCustomerDto(1L);
         Long customerId = customerDto.getId();
         doNothing()
                 .when(customerService)
@@ -237,15 +240,7 @@ public class CustomerControllerTests {
         verify(customerService, times(1))
                 .updateCustomerCountry(customerId, customerDto);
     }
-
-    private CountryDto getNewCountryDto() {
-        CountryDto countryDto = new CountryDto();
-        countryDto.setId(1L);
-        countryDto.setName("new country");
-        countryDto.setCountryCode("NEW");
-        return countryDto;
-    }
-
+    
     private void validateCustomerJsonResponse(
             ResultActions result,
             List<CustomerDto> customers

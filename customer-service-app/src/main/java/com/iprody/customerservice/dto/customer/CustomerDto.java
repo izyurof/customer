@@ -2,6 +2,7 @@ package com.iprody.customerservice.dto.customer;
 
 import com.iprody.customerservice.dto.contactdetails.ContactDetailsDto;
 import com.iprody.customerservice.dto.country.CountryDto;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.Instant;
@@ -31,9 +32,11 @@ public class CustomerDto {
     private String surname;
 
     @NotNull
+    @Valid
     private CountryDto countryDto;
 
     @NotNull
+    @Valid
     private ContactDetailsDto contactDetailsDto;
 
     private Instant createdAt;

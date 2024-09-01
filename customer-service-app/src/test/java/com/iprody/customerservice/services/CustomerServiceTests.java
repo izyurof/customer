@@ -1,5 +1,6 @@
 package com.iprody.customerservice.services;
 
+import static com.iprody.customerservice.utils.builder.ContactDetailsDtoBuilder.getContactDetailsDto;
 import static com.iprody.customerservice.utils.builder.CustomerDtoBuilder.getCustomerDto;
 import static com.iprody.customerservice.utils.builder.CustomerDtoBuilder.getSecondCustomerDto;
 import static com.iprody.customerservice.utils.builder.CustomerDtoBuilder.getThirdCustomerDto;
@@ -11,8 +12,9 @@ import com.iprody.customerservice.dto.customer.CustomerDto;
 import com.iprody.customerservice.mappers.CountryMapper;
 import com.iprody.customerservice.repositories.CountryRepository;
 import com.iprody.customerservice.repositories.CustomerRepository;
-import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,17 +40,15 @@ class CustomerServiceTests {
     @BeforeEach
     void cleanDataBase() {
         customerRepository.deleteAll();
-        countryRepository.deleteAll();
     }
 
     @Test
     public void shouldReturnSavedCustomer() {
         // given
-        CustomerDto customerDto = getCustomerDto();
-        CustomerDto savedCustomerDto = customerService.save(customerDto);
+        CustomerDto customerDto = getFullFieldCustomerDto(getCustomerDto(), 0);
 
         // when
-        CustomerDto customerDtoFromDb = customerService.findById(savedCustomerDto.getId()).get();
+        CustomerDto customerDtoFromDb = customerService.save(customerDto);
 
         // then
         assertThat(customerDtoFromDb).isNotNull();
@@ -62,7 +62,7 @@ class CustomerServiceTests {
         assertThat(customerDtoFromDb.getCountryDto().getCreatedAt()).isNotNull();
         assertThat(customerDtoFromDb.getCountryDto().getUpdatedAt()).isNotNull();
         assertThat(customerDto.getName())
-                .isEqualTo(savedCustomerDto.getName());
+                .isEqualTo(customerDtoFromDb.getName());
         assertThat(customerDtoFromDb.getSurname())
                 .isEqualTo(customerDto.getSurname());
         assertThat(customerDtoFromDb.getCountryDto().getCountryCode())
@@ -101,7 +101,7 @@ class CustomerServiceTests {
     @Test
     public void shouldUpdateCustomerNameIfCustomerIsExist() {
         // given
-        CustomerDto customerDto = getCustomerDto();
+        CustomerDto customerDto = getFullFieldCustomerDto(getCustomerDto(), 0);
         CustomerDto savedCustomerDto = customerService.save(customerDto);
 
         // when
@@ -112,6 +112,7 @@ class CustomerServiceTests {
                 .orElseThrow(AssertionError::new);
 
         // then
+        assertThat(savedCustomerDto.getId()).isEqualTo(changedCustomerDto.getId());
         assertThat(changedCustomerDto.getName()).isEqualTo("Maude");
         assertThat(savedCustomerDto.getName()).isNotEqualTo(changedCustomerDto.getName());
     }
@@ -119,7 +120,7 @@ class CustomerServiceTests {
     @Test
     public void shouldUpdateCustomerSurnameIfCustomerIsExist() {
         // given
-        CustomerDto customerDto = getCustomerDto();
+        CustomerDto customerDto = getFullFieldCustomerDto(getCustomerDto(), 0);
         CustomerDto savedCustomerDto = customerService.save(customerDto);
 
         // when
@@ -130,6 +131,7 @@ class CustomerServiceTests {
                 .orElseThrow(AssertionError::new);
 
         // then
+        assertThat(savedCustomerDto.getId()).isEqualTo(changedCustomerDto.getId());
         assertThat(changedCustomerDto.getSurname()).isEqualTo("Kasparov");
         assertThat(savedCustomerDto.getSurname()).isNotEqualTo(changedCustomerDto.getSurname());
     }
@@ -137,7 +139,7 @@ class CustomerServiceTests {
     @Test
     public void shouldUpdateCustomerEmailIfCustomerIsExist() {
         // given
-        CustomerDto customerDto = getCustomerDto();
+        CustomerDto customerDto = getFullFieldCustomerDto(getCustomerDto(), 0);
         CustomerDto savedCustomerDto = customerService.save(customerDto);
 
         // when
@@ -148,6 +150,7 @@ class CustomerServiceTests {
                 .orElseThrow(AssertionError::new);
 
         // then
+        assertThat(savedCustomerDto.getId()).isEqualTo(changedCustomerDto.getId());
         assertThat(changedCustomerDto.getContactDetailsDto().getEmail())
                 .isEqualTo("newleboski@gmail.com");
         assertThat(savedCustomerDto.getContactDetailsDto().getEmail())
@@ -157,7 +160,7 @@ class CustomerServiceTests {
     @Test
     public void shouldUpdateCustomerTelegramIdIfCustomerIfExist() {
         // given
-        CustomerDto customerDto = getCustomerDto();
+        CustomerDto customerDto = getFullFieldCustomerDto(getCustomerDto(), 0);
         CustomerDto savedCustomerDto = customerService.save(customerDto);
 
         // when
@@ -168,6 +171,7 @@ class CustomerServiceTests {
                 .orElseThrow(AssertionError::new);
 
         // then
+        assertThat(savedCustomerDto.getId()).isEqualTo(changedCustomerDto.getId());
         assertThat(changedCustomerDto.getContactDetailsDto().getTelegramId())
                 .isEqualTo("@newlebowski");
         assertThat(changedCustomerDto.getContactDetailsDto().getTelegramId())
@@ -177,44 +181,39 @@ class CustomerServiceTests {
     @Test
     public void shouldUpdateCustomerCountry() {
         // given
-        CustomerDto customerDto = getCustomerDto();
+        CustomerDto customerDto = getFullFieldCustomerDto(getCustomerDto(), 0);
         CustomerDto savedCustomerDto = customerService.save(customerDto);
 
         // when
-        CountryDto newCountryDto = new CountryDto();
-        newCountryDto.setCountryCode("ATA");
-        newCountryDto.setName("Antarctica");
-        newCountryDto.setCreatedAt(Instant.now());
-        newCountryDto.setUpdatedAt(Instant.now());
-        customerDto.setCountryDto(newCountryDto);
-        countryRepository.save(countryMapper.toCountry(newCountryDto));
-        customerDto.setCountryDto(newCountryDto);
-        customerService.updateCustomerCountry(savedCustomerDto.getId(), customerDto);
+        CustomerDto customerDtoWithNewCountry = getFullFieldCustomerDto(getCustomerDto(), 1);
+        customerService.updateCustomerCountry(savedCustomerDto.getId(), customerDtoWithNewCountry);
         CustomerDto changedCustomerDto = customerService
                 .findById(savedCustomerDto.getId())
                 .orElseThrow(AssertionError::new);
 
         // then
-        assertThat(changedCustomerDto.getCountryDto()).isNotNull();
-        assertThat(changedCustomerDto.getCountryDto().getId())
-                .isNotNull();
         assertThat(changedCustomerDto.getCountryDto().getCountryCode())
-                .isEqualTo("ATA")
-                .isNotEqualTo(savedCustomerDto.getCountryDto().getCountryCode());
+                .isEqualTo(customerDtoWithNewCountry.getCountryDto().getCountryCode())
+                .isNotEqualTo(savedCustomerDto.getCountryDto().getCountryCode())
+                .isNotNull();
         assertThat(changedCustomerDto.getCountryDto().getName())
-                .isEqualTo("Antarctica")
-                .isNotEqualTo(savedCustomerDto.getCountryDto().getName());
+                .isEqualTo(customerDtoWithNewCountry.getCountryDto().getName())
+                .isNotEqualTo(savedCustomerDto.getCountryDto().getName())
+                .isNotNull();
     }
 
     @Test
     public void shouldReturnFirstPageWithTwoCustomersWhenTotalCustomersMoreThenTwo() {
         // given
         PageRequest pageable = PageRequest.of(0, 2);
-        CustomerDto firstCustomerDto = getCustomerDto();
-        CustomerDto secondCustomerDto = getSecondCustomerDto();
-        CustomerDto thirdCustomerDto = getThirdCustomerDto();
+
+        CustomerDto firstCustomerDto = getFullFieldCustomerDto(getCustomerDto(), 0);
         customerService.save(firstCustomerDto);
+
+        CustomerDto secondCustomerDto = getFullFieldCustomerDto(getSecondCustomerDto(), 1);
         customerService.save(secondCustomerDto);
+
+        CustomerDto thirdCustomerDto = getFullFieldCustomerDto(getThirdCustomerDto(), 2);
         customerService.save(thirdCustomerDto);
 
         // when
@@ -234,11 +233,14 @@ class CustomerServiceTests {
     public void shouldReturnSecondPageWithOneCustomerWhenThereAreOnlyThreeCustomers() {
         // given
         PageRequest pageable = PageRequest.of(1, 2);
-        CustomerDto firstCustomerDto = getCustomerDto();
-        CustomerDto secondCustomerDto = getSecondCustomerDto();
-        CustomerDto thirdCustomerDto = getThirdCustomerDto();
+
+        CustomerDto firstCustomerDto = getFullFieldCustomerDto(getCustomerDto(), 0);
         customerService.save(firstCustomerDto);
+
+        CustomerDto secondCustomerDto = getFullFieldCustomerDto(getSecondCustomerDto(), 1);
         customerService.save(secondCustomerDto);
+
+        CustomerDto thirdCustomerDto = getFullFieldCustomerDto(getThirdCustomerDto(), 2);
         customerService.save(thirdCustomerDto);
 
         // when
@@ -258,16 +260,19 @@ class CustomerServiceTests {
     public void shouldReturnTheCustomerWithSpecifiedNameOnlyWithoutOrdering() {
         // given
         PageRequest pageable = PageRequest.of(0, 10);
-        CustomerDto firstCustomerDto = getCustomerDto();
-        CustomerDto secondCustomerDto = getSecondCustomerDto();
-        CustomerDto thirdCustomerDto = getThirdCustomerDto();
+
+        CustomerDto firstCustomerDto = getFullFieldCustomerDto(getCustomerDto(), 0);
         customerService.save(firstCustomerDto);
-        customerService.save(secondCustomerDto);
-        customerService.save(thirdCustomerDto);
+
+        CustomerDto secondCustomerDto = getFullFieldCustomerDto(getSecondCustomerDto(), 1);
+        CustomerDto secondSavedCustomerDto = customerService.save(secondCustomerDto);
+
+        CustomerDto thirdCustomerDto = getFullFieldCustomerDto(getThirdCustomerDto(), 2);
+        CustomerDto thirdSavedCustomerDto = customerService.save(thirdCustomerDto);
 
         // then
         Page<CustomerDto> result = customerService.findAll(
-                "Jeffrey",
+                firstCustomerDto.getName(),
                 null,
                 null,
                 null,
@@ -277,7 +282,9 @@ class CustomerServiceTests {
         assertThat(result.getTotalElements()).isEqualTo(2);
         assertThat(result.getContent().get(0).getName())
                 .isEqualTo(result.getContent().get(1).getName())
-                .isEqualTo("Jeffrey");
+                .isEqualTo(firstCustomerDto.getName())
+                .isEqualTo(secondSavedCustomerDto.getName())
+                .isNotEqualTo(thirdSavedCustomerDto.getName());
 
     }
 
@@ -285,17 +292,20 @@ class CustomerServiceTests {
     public void shouldReturnTheCustomersWithSpecifiedSurnameOnlyWithoutOrdering() {
         // given
         PageRequest pageable = PageRequest.of(0, 10);
-        CustomerDto firstCustomerDto = getCustomerDto();
-        CustomerDto secondCustomerDto = getSecondCustomerDto();
-        CustomerDto thirdCustomerDto = getThirdCustomerDto();
+
+        CustomerDto firstCustomerDto = getFullFieldCustomerDto(getCustomerDto(), 0);
         customerService.save(firstCustomerDto);
-        customerService.save(secondCustomerDto);
+
+        CustomerDto secondCustomerDto = getFullFieldCustomerDto(getSecondCustomerDto(), 1);
+        CustomerDto secondSavedCustomerDto = customerService.save(secondCustomerDto);
+
+        CustomerDto thirdCustomerDto = getFullFieldCustomerDto(getThirdCustomerDto(), 2);
         customerService.save(thirdCustomerDto);
 
         // when
         Page<CustomerDto> result = customerService.findAll(
                 null,
-                "Stepanov",
+                secondSavedCustomerDto.getSurname(),
                 null,
                 null,
                 pageable
@@ -305,44 +315,58 @@ class CustomerServiceTests {
         assertThat(result.getTotalElements()).isEqualTo(2);
         assertThat(result.getContent().get(0).getSurname())
                 .isEqualTo(result.getContent().get(1).getSurname())
-                .isEqualTo("Stepanov");
+                .isEqualTo(thirdCustomerDto.getSurname())
+                .isEqualTo(secondSavedCustomerDto.getSurname());
     }
 
     @Test
     public void shouldReturnTheCustomersWithSpecifiedCountryNameOnlyWithoutOrdering() {
         // given
         PageRequest pageable = PageRequest.of(0, 10);
-        CustomerDto firstCustomerDto = getCustomerDto();
-        CustomerDto secondCustomerDto = getSecondCustomerDto();
-        CustomerDto thirdCustomerDto = getThirdCustomerDto();
+
+        CustomerDto firstCustomerDto = getFullFieldCustomerDto(getCustomerDto(), 0);
         customerService.save(firstCustomerDto);
+
+        CustomerDto secondCustomerDto = getFullFieldCustomerDto(getSecondCustomerDto(), 1);
         customerService.save(secondCustomerDto);
+
+        CustomerDto thirdCustomerDto = getFullFieldCustomerDto(getThirdCustomerDto(), 2);
         customerService.save(thirdCustomerDto);
 
         // when
         Page<CustomerDto> result = customerService.findAll(
                 null,
                 null,
-                "Benin",
+                secondCustomerDto.getCountryDto().getName(),
                 null,
                 pageable
         );
 
         // then
         assertThat(result.getTotalElements()).isEqualTo(1);
-        assertThat(result.getContent().get(0).getCountryDto().getName()).isEqualTo("Benin");
+        assertThat(result.getContent().get(0).getCountryDto().getName())
+                .isEqualTo(secondCustomerDto.getCountryDto().getName());
     }
 
     @Test
     public void shouldReturnSortedPageWithAscSortDirection() {
         // given
         PageRequest pageable = PageRequest.of(0, 10);
-        CustomerDto firstCustomerDto = getCustomerDto();
-        CustomerDto secondCustomerDto = getSecondCustomerDto();
-        CustomerDto thirdCustomerDto = getThirdCustomerDto();
+
+        CustomerDto firstCustomerDto = getFullFieldCustomerDto(getCustomerDto(), 0);
         customerService.save(firstCustomerDto);
+
+        CustomerDto secondCustomerDto = getFullFieldCustomerDto(getSecondCustomerDto(), 1);
         customerService.save(secondCustomerDto);
+
+        CustomerDto thirdCustomerDto = getFullFieldCustomerDto(getThirdCustomerDto(), 2);
         customerService.save(thirdCustomerDto);
+
+        List<String> sortedCountryName = getSortedCountryName(
+                firstCustomerDto,
+                secondCustomerDto,
+                thirdCustomerDto
+        );
 
         // when
         Page<CustomerDto> result = customerService.findAll(
@@ -355,23 +379,31 @@ class CustomerServiceTests {
 
         // then
         assertThat(result.getContent().get(0).getCountryDto().getName())
-                .isEqualTo("Anguilla");
+                .isEqualTo(sortedCountryName.get(0));
         assertThat(result.getContent().get(1).getCountryDto().getName())
-                .isEqualTo("Benin");
+                .isEqualTo(sortedCountryName.get(1));
         assertThat(result.getContent().get(2).getCountryDto().getName())
-                .isEqualTo("Bouvet Island");
+                .isEqualTo(sortedCountryName.get(2));
     }
 
     @Test
     public void shouldReturnSortedPageWithDescSortDirection() {
         // given
         PageRequest pageable = PageRequest.of(0, 10);
-        CustomerDto firstCustomerDto = getCustomerDto();
-        CustomerDto secondCustomerDto = getSecondCustomerDto();
-        CustomerDto thirdCustomerDto = getThirdCustomerDto();
+        CustomerDto firstCustomerDto = getFullFieldCustomerDto(getCustomerDto(), 0);
         customerService.save(firstCustomerDto);
+
+        CustomerDto secondCustomerDto = getFullFieldCustomerDto(getSecondCustomerDto(), 1);
         customerService.save(secondCustomerDto);
+
+        CustomerDto thirdCustomerDto = getFullFieldCustomerDto(getThirdCustomerDto(), 2);
         customerService.save(thirdCustomerDto);
+
+        List<String> sortedCountryName = getSortedCountryName(
+                firstCustomerDto,
+                secondCustomerDto,
+                thirdCustomerDto
+        );
 
         // when
         Page<CustomerDto> result = customerService.findAll(
@@ -384,10 +416,32 @@ class CustomerServiceTests {
 
         // then
         assertThat(result.getContent().get(0).getCountryDto().getName())
-                .isEqualTo("Bouvet Island");
+                .isEqualTo(sortedCountryName.get(2));
         assertThat(result.getContent().get(1).getCountryDto().getName())
-                .isEqualTo("Benin");
+                .isEqualTo(sortedCountryName.get(1));
         assertThat(result.getContent().get(2).getCountryDto().getName())
-                .isEqualTo("Anguilla");
+                .isEqualTo(sortedCountryName.get(0));
+    }
+
+    private CustomerDto getFullFieldCustomerDto(CustomerDto customerDto, int indexList) {
+        customerDto.setContactDetailsDto(getContactDetailsDto());
+        CountryDto countryDto = countryMapper
+                .toCountryDto(countryRepository.findAll().get(indexList));
+        customerDto.setCountryDto(countryDto);
+        return customerDto;
+    }
+
+    private static List<String> getSortedCountryName(
+            CustomerDto firstCustomerDto,
+            CustomerDto secondCustomerDto,
+            CustomerDto thirdCustomerDto
+    ) {
+        return Stream.of(
+                        firstCustomerDto.getCountryDto().getName(),
+                        secondCustomerDto.getCountryDto().getName(),
+                        thirdCustomerDto.getCountryDto().getName()
+                )
+                .sorted()
+                .toList();
     }
 }

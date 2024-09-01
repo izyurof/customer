@@ -1,34 +1,24 @@
 package com.iprody.customerservice.validation;
 
-import static com.iprody.customerservice.utils.builder.CustomerDtoBuilder.getCustomerDtoWithId;
+import static com.iprody.customerservice.utils.builder.ContactDetailsDtoBuilder.getContactDetailsDtoWithId;
 import static jakarta.validation.Validation.buildDefaultValidatorFactory;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.iprody.customerservice.dto.contactdetails.ContactDetailsDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
+import java.util.List;
 import java.util.Set;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ContactDetailsDtoValidationTests {
 
-    private Validator validator;
-
-    @BeforeAll
-    public void initValidator() {
-        ValidatorFactory factory = buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
+    private Validator validator = buildDefaultValidatorFactory().getValidator();
 
     @Test
     public void shouldReturnNoErrorsWhenValidContactDetailsDto() {
         // given
-        ContactDetailsDto contactDetailsDto =
-                getCustomerDtoWithId().getContactDetailsDto();
+        ContactDetailsDto contactDetailsDto = getContactDetailsDtoWithId(1L);
 
         // when
         Set<ConstraintViolation<ContactDetailsDto>> validate =
@@ -41,75 +31,61 @@ public class ContactDetailsDtoValidationTests {
     @Test
     public void shouldReturnErrorWhenNullContactDetailsDtoEmail() {
         // given
-        ContactDetailsDto contactDetailsDto = new ContactDetailsDto();
+        ContactDetailsDto contactDetailsDto = getContactDetailsDtoWithId(1L);
+        contactDetailsDto.setEmail(null);
 
         // when
-        Set<ConstraintViolation<ContactDetailsDto>> validate =
-                validator.validate(contactDetailsDto);
-        long id = validate.stream()
-                .filter(
-                        violation -> violation.getPropertyPath().toString().equals("email")
-                )
-                .count();
+        List<ConstraintViolation<ContactDetailsDto>> violations =
+                validator.validate(contactDetailsDto).stream().toList();
 
         // then
-        assertThat(id).isEqualTo(1);
+        assertThat(violations.size()).isEqualTo(1);
+        assertThat(violations.get(0).getPropertyPath().toString()).isEqualTo("email");
     }
 
     @Test
     public void shouldReturnErrorWhenContactDetailsDtoEmailDoesNotMatchRegex() {
         // given
-        ContactDetailsDto contactDetailsDto = new ContactDetailsDto();
+        ContactDetailsDto contactDetailsDto = getContactDetailsDtoWithId(1L);
         contactDetailsDto.setEmail("abc@gmailcom/-++--efwgrt");
 
         // when
-        Set<ConstraintViolation<ContactDetailsDto>> validate =
-                validator.validate(contactDetailsDto);
-        long id = validate.stream()
-                .filter(
-                        violation -> violation.getPropertyPath().toString().equals("email")
-                )
-                .count();
+        List<ConstraintViolation<ContactDetailsDto>> violations =
+                validator.validate(contactDetailsDto).stream().toList();
 
         // then
-        assertThat(id).isEqualTo(1);
+        assertThat(violations.size()).isEqualTo(1);
+        assertThat(violations.get(0).getPropertyPath().toString()).isEqualTo("email");
     }
 
     @Test
     public void shouldReturnErrorWhenNullContactDetailsDtoTelegramId() {
         // given
-        ContactDetailsDto contactDetailsDto = new ContactDetailsDto();
+        ContactDetailsDto contactDetailsDto = getContactDetailsDtoWithId(1L);
+        contactDetailsDto.setTelegramId(null);
 
         // when
-        Set<ConstraintViolation<ContactDetailsDto>> validate =
-                validator.validate(contactDetailsDto);
-        long id = validate.stream()
-                .filter(
-                        violation -> violation.getPropertyPath().toString().equals("telegramId")
-                )
-                .count();
+        List<ConstraintViolation<ContactDetailsDto>> violations =
+                validator.validate(contactDetailsDto).stream().toList();
 
         // then
-        assertThat(id).isEqualTo(1);
+        assertThat(violations.size()).isEqualTo(1);
+        assertThat(violations.get(0).getPropertyPath().toString()).isEqualTo("telegramId");
     }
 
     @Test
     public void shouldReturnErrorWhenContactDetailsDtoTelegramIdDoesNotMatchRegex() {
         // given
-        ContactDetailsDto contactDetailsDto = new ContactDetailsDto();
+        ContactDetailsDto contactDetailsDto = getContactDetailsDtoWithId(1L);
         contactDetailsDto.setTelegramId("a@dghthrgshtgf");
 
         // when
-        Set<ConstraintViolation<ContactDetailsDto>> validate =
-                validator.validate(contactDetailsDto);
-        long id = validate.stream()
-                .filter(
-                        violation -> violation.getPropertyPath().toString().equals("telegramId")
-                )
-                .count();
+        List<ConstraintViolation<ContactDetailsDto>> violations =
+                validator.validate(contactDetailsDto).stream().toList();
 
         // then
-        assertThat(id).isEqualTo(1);
+        assertThat(violations.size()).isEqualTo(1);
+        assertThat(violations.get(0).getPropertyPath().toString()).isEqualTo("telegramId");
     }
 
 }
