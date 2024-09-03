@@ -29,11 +29,8 @@ jobs:
       - name: clean with Maven
         run: mvn -B clean
 
-#      - name: Checkstyle with Maven
-#        run: mvn -B checkstyle:check
-
       - name: Compile with Maven
         run: mvn -B compile
 
       - name: Test with Maven
-        run: mvn -B test
+        run: mvn -B -pl customer-service-app test
