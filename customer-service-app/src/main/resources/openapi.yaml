@@ -110,7 +110,7 @@ paths:
       responses:
         '204':
           description: Customer updated
-        '404':
+        '400':
           description: BadRequest (validation exception)
   /v1/customers/{id}/update/surname:
     patch:
@@ -135,7 +135,7 @@ paths:
       responses:
         '204':
           description: Customer updated
-        '404':
+        '400':
           description: BadRequest (validation exception)
   /v1/customers/{id}/update/name:
     patch:
@@ -160,7 +160,7 @@ paths:
       responses:
         '204':
           description: Customer updated
-        '404':
+        '400':
           description: BadRequest (validation exception)
   /v1/customers/{id}/update/email:
     patch:
@@ -185,7 +185,7 @@ paths:
       responses:
         '204':
           description: Customer updated
-        '404':
+        '400':
           description: BadRequest (validation exception)
   /v1/customers/{id}/update/country:
     patch:
@@ -209,7 +209,7 @@ paths:
       responses:
         '204':
           description: Customer updated
-        '404':
+        '400':
           description: BadRequest (validation exception)
   /v1/customers/{id}:
     get:
