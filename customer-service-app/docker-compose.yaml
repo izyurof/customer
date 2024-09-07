@@ -20,6 +20,27 @@ services:
       - postgres_user
       - postgres_password
 
+  liquibase:
+    image: liquibase/liquibase:latest
+    container_name: customer-service-liquibase
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./src/main/resources/db/changelog:/liquibase/changelog
+    command: >
+      sh -c '
+      liquibase
+      --url=jdbc:postgresql://db:5432/customer
+      --changelog-file=./changelog/db.changelog-master.yaml
+      --username=$$(cat /run/secrets/postgres_user)
+      --password=$$(cat /run/secrets/postgres_password)
+      update
+      '
+    secrets:
+      - postgres_user
+      - postgres_password
+
   db:
     image: postgres:latest
     container_name: customer-service-db
