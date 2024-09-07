@@ -1,0 +1,57 @@
+services:
+
+  app:
+    image: ghcr.io/iprody/iprody-devs-gr0000000011-customer-service/customer-service:latest
+    restart: always
+    container_name: customer-service-app
+    environment:
+      DATASOURCE_URL: jdbc:postgresql://db:5432/customer
+      DATASOURCE_DRIVER: org.postgresql.Driver
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:latest
+    container_name: customer-service-db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "--quiet" ]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  liquibase:
+    image: liquibase/liquibase:latest
+    container_name: customer-service-liquibase
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./src/main/resources/test-db/changelog:/liquibase/changelog/test-db
+      - ./src/main/resources/db/changelog:/liquibase/changelog/db
+    command: >
+      sh -c '
+      liquibase
+      --url=jdbc:postgresql://db:5432/postgres
+      --changelog-file=./changelog/test-db/test-db.changelog-master.yaml
+      --username=postgres
+      --password=postgres
+      update
+      '
+volumes:
+  db_data:
