@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 9
+      author: izyurof
+      changes:
+        - sqlFile:
+            path: insert-testdata-into-contactdetails-table.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 10
+      author: izyurof
+      changes:
+        - sqlFile:
+            path: insert-testdata-into-customer-table.sql
+            relativeToChangelogFile: true
