@@ -5,7 +5,7 @@ services:
     restart: always
     container_name: customer-service-app
     environment:
-      DATASOURCE_URL: jdbc:postgresql://db:5432/customer
+      DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
       DATASOURCE_DRIVER: org.postgresql.Driver
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
@@ -53,5 +53,6 @@ services:
       --password=postgres
       update
       '
+
 volumes:
   db_data:
