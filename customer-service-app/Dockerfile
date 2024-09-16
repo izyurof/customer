@@ -4,6 +4,8 @@ WORKDIR /build
 
 COPY customer-service-app/src customer-service-app/src
 COPY customer-service-app/pom.xml customer-service-app/pom.xml
+COPY openapi openapi
+
 COPY e2e/pom.xml e2e/pom.xml
 COPY pom.xml .
 
@@ -23,6 +25,7 @@ USER customer-service
 WORKDIR /customer-service-app
 
 COPY --from=build build/customer-service-app.jar customer-service-app.jar
+COPY customer-service-app/security customer-service-app/security
 
 EXPOSE 8080
 EXPOSE 8043
