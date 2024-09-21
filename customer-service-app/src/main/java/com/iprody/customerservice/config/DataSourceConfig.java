@@ -1,5 +1,7 @@
 package com.iprody.customerservice.config;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
 @Slf4j
@@ -29,14 +30,14 @@ public class DataSourceConfig {
 
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(driverClassName);
-        dataSource.setUrl(dbUrl);
+        HikariConfig config = new HikariConfig();
+        config.setDriverClassName(driverClassName);
+        config.setJdbcUrl(dbUrl);
         String username = getSecretFromFile(usernameSecret).orElse(usernameSecret);
         String password = getSecretFromFile(passwordSecret).orElse(passwordSecret);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        return dataSource;
+        config.setUsername(username);
+        config.setPassword(password);
+        return new HikariDataSource(config);
     }
 
     private Optional<String> getSecretFromFile(String secretFile) {
