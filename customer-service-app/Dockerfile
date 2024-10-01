@@ -25,7 +25,6 @@ USER customer-service
 WORKDIR /customer-service-app
 
 COPY --from=build build/customer-service-app.jar customer-service-app.jar
-COPY customer-service-app/security customer-service-app/security
 
 EXPOSE 8080
 EXPOSE 8043
