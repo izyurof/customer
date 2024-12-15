@@ -1,9 +1,10 @@
-FROM maven:3.9.8-amazoncorretto-21-al2023 AS build
+FROM maven:3.9.9-amazoncorretto-21-al2023 AS build
 
 WORKDIR /build
 
 COPY customer-service-app/src customer-service-app/src
 COPY customer-service-app/pom.xml customer-service-app/pom.xml
+COPY customer-service-app/logstash-configs customer-service-app/logstash-configs
 COPY openapi openapi
 
 COPY e2e/pom.xml e2e/pom.xml
@@ -25,6 +26,7 @@ USER customer-service
 WORKDIR /customer-service-app
 
 COPY --from=build build/customer-service-app.jar customer-service-app.jar
+COPY --from=build build/customer-service-app/logstash-configs logstash-configs
 
 EXPOSE 8080
 EXPOSE 8043

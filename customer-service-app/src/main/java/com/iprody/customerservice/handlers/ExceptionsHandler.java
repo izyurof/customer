@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Slf4j
 @ControllerAdvice
 public class ExceptionsHandler {
+    String
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorsResponseDto> handleValidationException(

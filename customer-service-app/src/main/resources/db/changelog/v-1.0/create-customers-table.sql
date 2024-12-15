@@ -1,6 +1,6 @@
 CREATE SEQUENCE IF NOT EXISTS customers_seq
     START WITH 1
-    INCREMENT BY 1;
+    INCREMENT BY 15;
 
 CREATE TABLE IF NOT EXISTS customers (
     id BIGINT DEFAULT nextval('customers_seq') PRIMARY KEY,

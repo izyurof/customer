@@ -1,5 +1,62 @@
 services:
 
+  app:
+    build:
+      context: ..
+      dockerfile: ./customer-service-app/Dockerfile
+    restart: always
+    container_name: customer-service
+    environment:
+      DATASOURCE_URL: 'jdbc:postgresql://db:5432/postgres'
+      DATASOURCE_DRIVER: org.postgresql.Driver
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - elk
+
+  db:
+    image: postgres:latest
+    container_name: postgres_db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "--quiet" ]
+      interval: 1s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  liquibase:
+    image: liquibase/liquibase:latest
+    container_name: liquibase
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./src/main/resources/test-db/changelog:/liquibase/changelog/test-db
+      - ./src/main/resources/db/changelog:/liquibase/changelog/db
+    command: >
+      sh -c '
+      liquibase
+      --url=jdbc:postgresql://db:5432/postgres
+      --changelog-file=./changelog/test-db/test-db.changelog-master.yaml
+      --username=postgres
+      --password=postgres
+      update
+      '
+
   elasticsearch:
     image: elasticsearch:8.15.1
     container_name: elasticsearch
@@ -25,6 +82,19 @@ services:
       - "9200:9200"
     networks:
       - elk
+
+  apm-server:
+    image: docker.elastic.co/apm/apm-server:7.17.0
+    container_name: apm-server
+    environment:
+      - output.elasticsearch.hosts=["http://elasticsearch:9200"]
+      - apm-server.rum.enabled=true
+    ports:
+      - "8200:8200"
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
 
   logstash:
     image: logstash:8.15.1
